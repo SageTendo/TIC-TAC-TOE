@@ -2,7 +2,6 @@
 import os
 import random
 import time
-import keyboard
 
 
 #  Display Game Title
