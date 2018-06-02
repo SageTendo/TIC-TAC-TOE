@@ -1,1 +1,2 @@
-# TIC TAC TOE
+Console Version of Tic Tac Toe...
+Includes windows os commands.
