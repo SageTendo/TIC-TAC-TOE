@@ -2,6 +2,7 @@
 import os
 import random
 import time
+import keyboard
 
 
 #  Display Game Title
@@ -54,7 +55,7 @@ def EnterPlayerNames():
     n1 = raw_input("ENTER NAME OF A PLAYER: ")
     print('\n')
     n2 = raw_input("ENTER NAME OF THE OTHER PLAYER: ")
-    while n1 == n2:
+    while n1 == n2 and n1 <> "":
         print("This name has been taken.")
         n2 = raw_input("ENTER NAME OF THE OTHER PLAYER: ")
 
@@ -102,41 +103,59 @@ def PrintBoard():
 
 #  Current Player PLays A Turn
 def PlayTurn():
-    global Board, current
+    global Board, current, Ekey
     valid = False
     print('\n')
-    choice = raw_input("Choose another Number: ")
-    
-    try:
-        choice = int(choice)
-        while choice == 0 or choice > 9:
-            print("NUMBER OUT OF RANGE!")
 
+    # if statement for player is cpu or real...
+    if current[0] <> "":
+
+        GetInput()
+        choice = Ekey
+
+        try:
             choice = int(choice)
-        while not valid:
-            if Board[choice - 1] == " ":
-                Board[choice - 1] = current[sign]
-                valid = True
-            elif Board[choice - 1] == current[sign]:
-                print("You already played this cell.")
-                print("Choose Another.")
-                choice = raw_input("Choose another cell: ")
+            while choice == 0 or choice > 9:
+                print("NUMBER OUT OF RANGE!")
+                # choice = raw_input("Choose another Number: ")
+                GetInput()
+                choice = Ekey
                 choice = int(choice)
+
+            while not valid:
                 if Board[choice - 1] == " ":
                     Board[choice - 1] = current[sign]
                     valid = True
-            elif Board[choice - 1] <> current[sign] or Board[choice - 1] <> " ":
-                print("The other player occupies this cell.")
-                print("Choose Another.")
-                choice = raw_input("Choose another cell: ")
-                choice = int(choice)
-                if Board[choice - 1] == " ":
-                    Board[choice - 1] = current[sign]
-                    valid = True
-    except:
-        print '\n'
-        print "E N T E R    A    N U M B E R!".center(75, " ")
-        print '\n'
+
+                elif Board[choice - 1] == current[sign]:
+                    print("You already played this cell.")
+                    print("Choose Another.")
+                    # choice = raw_input("Choose another cell: ")
+                    GetInput()
+                    choice = Ekey
+                    choice = int(choice)
+                    if Board[choice - 1] == " ":
+                        Board[choice - 1] = current[sign]
+                        valid = True
+
+                elif Board[choice - 1] <> current[sign] or Board[choice - 1] <> " ":
+                    print("The other player occupies this cell.")
+                    print("Choose Another.")
+                    # choice = raw_input("Choose another cell: ")
+                    GetInput()
+                    choice = Ekey
+                    choice = int(choice)
+                    if Board[choice - 1] == " ":
+                        Board[choice - 1] = current[sign]
+                        valid = True
+
+        except:
+            print '\n'
+            print "E N T E R    A    N U M B E R!".center(75, " ")
+            print '\n'
+
+    else:
+        Cpumode()
 
 
 # Swaps Current Player
@@ -278,9 +297,113 @@ def SwitchFirstPlayer():
     current = p1
 
 
+def Cpumode():
+    global loopcount, move
+    cmove = 20
+    moved = False
+    if moved == False:
+        while Board[move] <> " ":
+            move = random.randint(0,8)
+        moved = True
+
+    playpick = random.randint(0,1)
+    while True:
+        if loopcount < 1:
+            if playpick == 0:
+                if Board[4] == " ":
+                    move = 4
+                else:
+                    if loopcount <> 2:
+                        randomposition = random.randrange(0, 9, 2)
+                        while randomposition == 4 or Board[randomposition] <> " ":
+                            randomposition = random.randrange(0, 9, 2)
+                        move = randomposition
+                        loopcount += 1
+            else:
+                if loopcount <> 2:
+                    randomposition = random.randrange(0, 9, 2)
+                    while randomposition == 4 or Board[randomposition] <> " ":
+                        randomposition = random.randrange(0, 9, 2)
+                    move = randomposition
+                    loopcount += 1
+        elif loopcount <> 2:
+            randomposition = random.randrange(0, 9, 2)
+            while randomposition == 4 or Board[randomposition] <> " ":
+                randomposition = random.randrange(0, 9, 2)
+            move = randomposition
+            loopcount += 1
+
+        #  play possible wins
+        for x,y,z in possiblewins:
+            if Board[x] == current[1] and Board[y] == current[1] and Board[z] == " ":
+                move = z
+                break
+            elif Board[x] == current[1] and Board[y] == " " and Board[z] == current[1]:
+                move = y
+                break
+            elif Board[x] == " " and Board[y] == current[1] and Board[z] == current[1]:
+                move = x
+                break
+
+        #check for possible player win
+        for x,y,z in possiblewins:
+            if Board[x] == " " and Board[y] <> " " and Board[z] <> " ":
+                if Board[x] == " " and Board[y] <> current[1] and Board[z] <> current[1]:
+                    cmove = x
+                    break
+            elif Board[x] <> " " and Board[y] == " " and Board[z] <> " ":
+                if Board[x] <> current[1] and Board[y] == " " and Board[z] <> current[1]:
+                    cmove = y
+                    break
+            elif Board[x] <> " " and Board[y] <> " " and Board[z] == " ":
+                if Board[x] <> current[1] and Board[y] <> current[1] and Board[z] == " ":
+                    cmove = z
+                    break
+
+        #Decide on whether to play defensive or offensive
+        for x,y,z in possiblewins:
+
+            if (
+            (Board[x] == " " and Board[y] == current[1] and Board[z] == current[1]) or
+            (Board[x] == current[1] and Board[y] == " " and Board[z] == current[1]) or
+            (Board[x] == current[1] and Board[y] == current[1] and Board[z] == " ")
+                ):
+                Board[move] = current[1]
+                break
+
+            else:
+
+                if cmove < 10:
+                    Board[cmove] = current[1]
+                    break
+                else:
+                    Board[move] = current[1]
+                    break
+        # Ends player AI turn
+        break
+
+
+#  Gets Input From Player
+def GetInput():
+    global Ekey, Key
+    Keypress = True
+    while Keypress:
+        Ekey = ""
+        Ekey = keyboard.read_key(suppress=False)
+        Key = ""
+        Key = keyboard.read_event(suppress=False)
+
+        if Key <> 'KeyboardEvent(' + str(Ekey) + ' down)':
+            Ekey = str(Ekey)
+            Keypress = False
+
+
 # Start Of Code Execution
 PlayAgain = ""
 NewGame = True
+Ekey = ""
+Key = ""
+possiblewins = [ [0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6] ]
 
 while NewGame:
 
@@ -315,6 +438,10 @@ while NewGame:
     #   Variable To Count Number OF Empty Cells Left
     count = 0
 
+    #indicates whether first random move has been played by AI if middle cell had been played.
+    loopcount = 0
+    move = random.randint(1,8)
+
     DisplayTitle()
     time.sleep(3)
     os.system("cls")
@@ -324,7 +451,7 @@ while NewGame:
     EnterPlayerNames()
     ChooseFirstPlayer()
     time.sleep(3)
-    os.system('clear')
+    os.system('cls')
 
     while ContinueGame:
         GameHeader()
@@ -351,11 +478,11 @@ while NewGame:
             EndGame = False
             InitBoard()
             SwitchFirstPlayer()
-            os.system('clear')
+            os.system('cls')
             time.sleep(.25)
         else:
             ContinueGame = False
             EndGame = True
             n1count = 0
             n2count = 0
-            os.system('clear')
+            os.system('cls')
