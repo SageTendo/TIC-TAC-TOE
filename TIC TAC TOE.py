@@ -8,11 +8,11 @@ import keyboard
 #  Display Game Title
 def DisplayTitle():
     print("""
-  _______ _____ _____   _______       _____   _______ ____  ______ 
+  _______ _____ _____   _______       _____   _______ ____  ______
  |__   __|_   _/ ____| |__   __|/\   / ____| |__   __/ __ \|  ____|
-    | |    | || |         | |  /  \ | |         | | | |  | | |__   
-    | |    | || |         | | / /\ \| |         | | | |  | |  __|  
-    | |   _| || |____     | |/ ____ \ |____     | | | |__| | |____ 
+    | |    | || |         | |  /  \ | |         | | | |  | | |__
+    | |    | || |         | | / /\ \| |         | | | |  | |  __|
+    | |   _| || |____     | |/ ____ \ |____     | | | |__| | |____
     |_|  |_____\_____|    |_/_/    \_\_____|    |_|  \____/|______|
 
                                                                    """).center(75, " ")
@@ -22,6 +22,7 @@ def DisplayTitle():
 def Header():
     print("""
                         I N S T R U C T I O N S
+
                                   1|2|3
                                   -----
                                   4|5|6
@@ -31,12 +32,14 @@ def Header():
        pick a number from 1-9 to assign an 'X' or 'O' to an empty grid cell
                       |Players 1 & 2 are assigned randomly|
        |Player 1 will be assigined 'X'| & |Player 2 will be assigned 'O'|
+
 """)
 
 
 #  Display Grid Reference
 def GameHeader():
     print("""
+
                                   1|2|3
                                   -----
                                   4|5|6
@@ -100,22 +103,21 @@ def PrintBoard():
 
 #  Current Player PLays A Turn
 def PlayTurn():
-    global Board, current
+    global Board, current, Ekey
     valid = False
     print('\n')
     choice = raw_input("Choose another Number: ")
+    
     try:
         choice = int(choice)
         while choice == 0 or choice > 9:
             print("NUMBER OUT OF RANGE!")
-            choice = raw_input("Choose another Number: ")
-            choice = int(choice)
 
+            choice = int(choice)
         while not valid:
             if Board[choice - 1] == " ":
                 Board[choice - 1] = current[sign]
                 valid = True
-
             elif Board[choice - 1] == current[sign]:
                 print("You already played this cell.")
                 print("Choose Another.")
@@ -124,7 +126,6 @@ def PlayTurn():
                 if Board[choice - 1] == " ":
                     Board[choice - 1] = current[sign]
                     valid = True
-
             elif Board[choice - 1] <> current[sign] or Board[choice - 1] <> " ":
                 print("The other player occupies this cell.")
                 print("Choose Another.")
@@ -133,7 +134,6 @@ def PlayTurn():
                 if Board[choice - 1] == " ":
                     Board[choice - 1] = current[sign]
                     valid = True
-
     except:
         print '\n'
         print "E N T E R    A    N U M B E R!".center(75, " ")
@@ -282,8 +282,11 @@ def SwitchFirstPlayer():
 # Start Of Code Execution
 PlayAgain = ""
 NewGame = True
+Ekey = ""
+Key = ""
 
 while NewGame:
+
     Board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
 
     #   Name Variables for Players
@@ -317,10 +320,10 @@ while NewGame:
 
     DisplayTitle()
     time.sleep(3)
-    os.system('cls')
+    os.system("cls")
     Header()
     os.system("pause")
-    os.system('cls')
+    os.system("cls")
     EnterPlayerNames()
     ChooseFirstPlayer()
     time.sleep(3)
@@ -332,7 +335,7 @@ while NewGame:
         while not EndGame:
             PlayTurn()
             SwapPlayer()
-            os.system('cls')
+            os.system("cls")
             GameHeader()
             PrintBoard()
             CheckforTic()
