@@ -327,7 +327,7 @@ while NewGame:
     EnterPlayerNames()
     ChooseFirstPlayer()
     time.sleep(3)
-    os.system('cls')
+    os.system('clear')
 
     while ContinueGame:
         GameHeader()
@@ -356,7 +356,7 @@ while NewGame:
             EndGame = False
             InitBoard()
             SwitchFirstPlayer()
-            os.system('cls')
+            os.system('clear')
             time.sleep(.25)
             Ekey = ""
         else:
@@ -364,4 +364,4 @@ while NewGame:
             EndGame = True
             n1count = 0
             n2count = 0
-            os.system('cls')
+            os.system('clear')
