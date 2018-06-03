@@ -365,11 +365,7 @@ while NewGame:
         #   Players Choose Between Reset The Game or Continuing
         print '\n'
         print("Press [P] To PLAY AGAIN **OR** [N] To Start A NEW GAME")
-        for i in range(100):
-            keyboard.send('backspace', do_press=True, do_release=True)
-        #PlayAgain = raw_input()
-        GetInput()
-        PlayAgain = Ekey
+        PlayAgain = raw_input()
         PlayAgain = str(PlayAgain)
         while PlayAgain.lower() <> 'p' and PlayAgain.lower() <> 'n':
             print("Press [P] To PLAY AGAIN **OR** [N] To Start A NEW GAME")
@@ -381,7 +377,6 @@ while NewGame:
             SwitchFirstPlayer()
             os.system('cls')
             time.sleep(.25)
-            Ekey = ""
         else:
             ContinueGame = False
             EndGame = True
